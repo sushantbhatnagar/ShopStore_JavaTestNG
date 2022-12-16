@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<!-- use parallel = "methods" to run methods in parallel instead of file -->
+<suite parallel="tests" name="Suite">
+	<!-- Upto 5 methods can be run parallely with thread-count -->
+	
+	
+  <listeners>
+	<listener class-name="Centric.ShoppingStoreTestComponents.Listeners"/>
+	<listener class-name="Centric.ShoppingStoreTestComponents.TestRetryAnalyzerListener"/>
+  </listeners>
+  	
+  <test thread-count="5" name="Submit Order Test">
+    <classes>
+      <class name="Centric.ShoppingStoreTests.SubmitOrderTest"/>
+    </classes>
+  </test>
+  
+  <test thread-count="5" name="Error Validations Tests">
+    <classes>
+      <class name="Centric.ShoppingStoreTests.ErrorValidationTest"/>
+    </classes>
+  </test>
+</suite> <!-- Suite -->
