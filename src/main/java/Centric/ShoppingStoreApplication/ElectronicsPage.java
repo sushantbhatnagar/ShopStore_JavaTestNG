@@ -27,12 +27,15 @@ public class ElectronicsPage extends AbstractComponent {
 	
 	By findProduct = By.cssSelector("h2");
 	By addToCart = By.cssSelector(".add-info > div:last-of-type > input");
+	By addToWishlist = By.cssSelector(".add-info > div:last-of-type > input:nth-child(3)");
 	By shoppingCartToastMsg = By.cssSelector("#bar-notification > p");
 	
 	
 	@FindBy(css= "#bar-notification a")
 	WebElement shoppingCartNotification;
-		
+	
+	
+
 	
 	public WebElement getProductByName(String productName) {
 		WebElement htcProduct = products.stream().filter(product->product.findElement(findProduct).
@@ -41,7 +44,7 @@ public class ElectronicsPage extends AbstractComponent {
 		
 	}
 	
-	public void addProductToCart(String productName ) {
+	public void addProductToCart(String productName) {
 		WebElement product = getProductByName(productName);
 		product.findElement(addToCart).click();
 	}
@@ -51,4 +54,20 @@ public class ElectronicsPage extends AbstractComponent {
 		shoppingCartNotification.click();
 		return new ShoppingCart(driver);
 	}
+	
+	
+	
+	public Wishlist navigateToWishListPage() {
+		waitForElementToAppear(shoppingCartToastMsg);
+		shoppingCartNotification.click();
+		return new Wishlist(driver);
+	}
+
+	public void addProductToWishlist(String productToWishFor) {
+		WebElement wishlistProduct = getProductByName(productToWishFor);
+		wishlistProduct.findElement(addToWishlist).click();
+		
+	}
+	
+	
 }
