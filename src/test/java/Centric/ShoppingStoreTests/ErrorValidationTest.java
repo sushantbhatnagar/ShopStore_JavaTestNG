@@ -1,5 +1,11 @@
 package Centric.ShoppingStoreTests;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import Centric.ShoppingStoreTestComponents.BaseTest;
@@ -27,4 +33,20 @@ public class ErrorValidationTest extends BaseTest {
 	}
 	
 	
+	@Test(dataProvider="getErrorValidationData", groups= {"ErrorHandling"})
+	public void invalidIDUsingExcel(ArrayList<String> data) {
+		System.out.println("Data coming in is "+data.get(1));
+		login.loginApplication(data.get(1), data.get(2));
+		String wrongPass = login.invalidpassWord();
+		Assert.assertEquals("The credentials provided are incorrect", wrongPass);
+	}
+	
+	
+	 // using Excel to fetch data
+	@DataProvider
+	public Object[][] getErrorValidationData() throws IOException {
+		
+		ArrayList<String> data = getExcelData("Login", "ErrorValidation");
+		return new Object[][] {{data}};		
+	}	
 }

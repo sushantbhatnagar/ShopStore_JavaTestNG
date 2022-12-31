@@ -6,11 +6,19 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.util.NumberToTextConverter;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -18,10 +26,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
-
-import com.aventstack.extentreports.ExtentReports;
-import com.aventstack.extentreports.reporter.ExtentSparkReporter;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -76,6 +80,58 @@ public class BaseTest {
 			});	
 		return data;		
 	}
+	
+	
+	
+	public ArrayList<String> getExcelData(String SheetName, String testcaseName) throws IOException {
+		
+		ArrayList<String> testData = new ArrayList<String>();
+		FileInputStream fis = new FileInputStream(System.getProperty("user.dir")+
+		"//src//test//java//Centric//ShoppingStoreTestData//excelData.xlsx");
+		
+		XSSFWorkbook workbook = new XSSFWorkbook(fis);
+		
+		int worksheets = workbook.getNumberOfSheets();
+		for(int i=0; i<worksheets; i++) {		
+			if(workbook.getSheetName(i).equalsIgnoreCase(SheetName)) {
+				XSSFSheet worksheet = workbook.getSheetAt(i);
+				
+				Iterator<Row> rows = worksheet.iterator();
+				Row firstrow = rows.next(); // First Row				
+				Iterator<Cell> cells = firstrow.cellIterator();
+				int k = 0;
+				int col = 0;
+				while(cells.hasNext()) {
+					Cell cellValue = cells.next();
+					if(cellValue.getStringCellValue().equalsIgnoreCase("TestCases")) {
+						col=k;
+					}
+					k++;
+				}
+				System.out.println("Column index is " +col);
+				
+				while(rows.hasNext()) {
+					Row r = rows.next();
+					Cell c = r.getCell(col);
+					if(c.getStringCellValue().equalsIgnoreCase(testcaseName)) {
+						Iterator<Cell> cv = r.cellIterator();
+						while(cv.hasNext()) {
+							
+							Cell cell = cv.next();
+							if(cell.getCellType()== CellType.STRING) {
+								testData.add(cell.getStringCellValue());
+							}
+							else {
+								testData.add(NumberToTextConverter.toText(cell.getNumericCellValue()));	
+							}		
+					}				
+				}
+			}							
+		}		
+	}
+		
+	return testData;		
+}
 	
 	
 	@BeforeMethod(alwaysRun=true)
