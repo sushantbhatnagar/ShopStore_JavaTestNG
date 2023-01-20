@@ -111,7 +111,8 @@ public class BaseTest {
 				System.out.println("Column index is " +col);
 				
 				while(rows.hasNext()) {
-					Row r = rows.next();
+					
+					Row r = rows.next();			
 					Cell c = r.getCell(col);
 					if(c.getStringCellValue().equalsIgnoreCase(testcaseName)) {
 						Iterator<Cell> cv = r.cellIterator();
@@ -120,16 +121,19 @@ public class BaseTest {
 							Cell cell = cv.next();
 							if(cell.getCellType()== CellType.STRING) {
 								testData.add(cell.getStringCellValue());
+								System.out.println(testData);
 							}
 							else {
-								testData.add(NumberToTextConverter.toText(cell.getNumericCellValue()));	
-							}		
+								testData.add(NumberToTextConverter.toText(cell.getNumericCellValue()));
+								System.out.println(testData);
+
+						}		
 					}				
 				}
 			}							
 		}		
 	}
-		
+	System.out.println(testData);	
 	return testData;		
 }
 	

@@ -32,7 +32,7 @@ public class ErrorValidationTest extends BaseTest {
 		Assert.assertEquals("The credentials provided are incorrect", wrongPass);
 	}
 	
-	
+	// using Excel to fetch data
 	@Test(dataProvider="getErrorValidationData", groups= {"ErrorHandling"})
 	public void invalidIDUsingExcel(ArrayList<String> data) {
 		System.out.println("Data coming in is "+data.get(1));
